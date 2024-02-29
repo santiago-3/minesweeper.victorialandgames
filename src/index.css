@@ -7,7 +7,197 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.App {
+    height: 100%;
+    display: flex;
+    width: 100%;
+    flex-grow: 1;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+header {
+    background-color: #222;
+    color: #fff;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    border-bottom: 3px dashed #000;
+}
+
+.content {
+    flex-grow: 1;
+    background-color: #333;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.content .column-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    background-color: #444;
+    border-right: 3px dashed #222;
+    padding: 20px;
+}
+
+main {
+    padding: 32px;
+}
+button {
+    cursor: pointer;
+    background-color: #aac;
+    padding: 8px;
+    border-radius: 8px;
+    border: 2px dashed #99b;
+    width: 200px;
+}
+
+button.selected {
+    background-color: #668;
+    border: 2px dashed #557;
+    color: #fff;
+}
+.minesweeper {
+    border-radius: 8px;
+}
+
+.status-bar {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    justify-content: center;
+}
+.status-bar > div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.param > div{
+    text-align: left;
+}
+
+.param label {
+    color: #aaa;
+}
+
+.param input {
+    border-radius: 8px;
+    text-align: center;
+    border: none;
+    padding: 4px;
+    background-color: #ccc;
+    height: 32px;
+}
+
+/*
+ *  game
+ */
+
+.game {
+    border: 3px dashed #779;
+    border-radius: 8px;
+    background-color: #fff;
+}
+.row {
+    display: flex;
+}
+.square {
+    width: 35px;
+    height: 35px;
+    border: 1px solid #fee;
+    border-bottom: none;
+    border-right: none;
+    background-color: #aab;
+    display: flex;
+    justify-content: center;
+}
+.square:first-child {
+    border-left: none;
+}
+
+.row:first-child .square{
+    border-top: none;
+}
+
+.game.running .square {
+    cursor: pointer;
+}
+
+.game.running .square:hover {
+    background-color: none;
+    background: radial-gradient(#ccd, #aab);
+}
+
+.game.running .square.revealed:hover {
+    background: none;
+}
+
+.square .display {
+    line-height: 35px;
+}
+
+.square.revealed {
+    background: none;
+    cursor: default;
+}
+
+.square img {
+    padding: 2px;
+    width: 30px;
+    height: 30px;
+}
+
+.hasMine img {
+    width: 40px;
+}
+
+.game.gameOver .square {
+    cursor: default;
+}
+
+.mines-1 { color: #00b }
+.mines-2 { color: #060 }
+.mines-3 { color: #b00 }
+.mines-4 { color: #606 }
+
+.dialog-area {
+    display: flex;
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    justify-content: center;
+    align-items: center;
+}
+.dialog-box {
+    color: #fff;
+    background-color: #668;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.dialog-box .buttons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+.dialog-box button {
+    width: 100px;
+}
+.dialog-box button.yes { background-color: #abc }
+.dialog-box button.no { background-color: #bac }
