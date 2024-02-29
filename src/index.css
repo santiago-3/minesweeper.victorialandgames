@@ -201,3 +201,38 @@ button.selected {
 }
 .dialog-box button.yes { background-color: #abc }
 .dialog-box button.no { background-color: #bac }
+
+.matches {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: scroll;
+    /*
+    background-color: #333;
+    padding: 8px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    */
+}
+.match {
+    border-radius: 8px;
+    color: #334;
+    padding: 10px;
+    text-align: left;
+    position: relative;
+    background-color: #eef;
+}
+.match .number {
+    font-weight: bold;
+    font-size: 20px;
+    color: #bbc;
+}
+.match .result {
+    top: 0px;
+    font-size: 20px;
+}
+.match .front {
+    z-index: 10;
+}

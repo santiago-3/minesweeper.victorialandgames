@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Game from './Game.jsx'
 import ConfirmationDialog from './ConfirmationDialog.js'
+import Match from './Match.js'
 
 const modeNames = {
     BEGINNER : 'beginner',
@@ -23,6 +24,7 @@ function GameManager() {
     let [width, setWidth]           = useState(9)
     let [height, setHeight]         = useState(9)
     let [totalMines, setTotalMines] = useState(10)
+    let [matches, setMatches]       = useState([])
 
     useEffect( () => {
         setGameKey(g => g+1)
@@ -33,6 +35,11 @@ function GameManager() {
         setHeight(modes[mode].height)
         setTotalMines(modes[mode].mines)
     }, [mode])
+
+    function addMatch(match) {
+        match.mode = mode
+        setMatches(matches.concat(match))
+    }
 
     function confirmMode() {
         setMode(cMode)
@@ -47,6 +54,17 @@ function GameManager() {
         setCMode(candidateMode)
         setShowDialog(true)
     }
+
+    let visualMatches = matches.map( (match,index) => {
+        return <Match
+                key={index}
+                plays={match.plays}
+                duration={match.duration}
+                mode={match.mode}
+                state={match.state}
+                number={index+1}
+            />
+    })
 
     return (
         <>
@@ -70,54 +88,20 @@ function GameManager() {
                         >
                             Advanced
                         </button>
-                        {/*
-                        */}
-                    {/*
-                    <div className="param">
                         <div>
-                            <label>Width</label>
+                            <button onClick={() => { setGameKey(gameKey+1) }}>
+                                Restart
+                            </button>
                         </div>
-                        <input
-                            type="text"
-                            placeholder="width"
-                            value={width}
-                            onChange={ (e) => { setWidth(e.target.value) }}
-                        />
-                    </div>
-                    <div className="param">
-                        <div>
-                            <label>Height</label>
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="height"
-                            value={height}
-                            onChange={ (e) => { setHeight(e.target.value) }}
-                        />
-                    </div>
-                    <div className="param">
-                        <div>
-                            <label>Mines</label>
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="total mines"
-                            value={totalMines}
-                            onChange={ (e) => { setTotalMines(e.target.value) }}
-                        />
-                    </div>
-                    */}
-                    <div>
-                        <button onClick={() => { setGameKey(gameKey+1) }}>
-                            Restart
-                        </button>
+                    <div className="matches">
+                        {visualMatches}
                     </div>
                 </div>
                 <main>
-                    <Game width={width} height={height} totalMines={totalMines} key={gameKey} />
+                    <Game width={width} height={height} totalMines={totalMines} key={gameKey} addMatch={addMatch}/>
                 </main>
             </div>
-            { 
+            {
                 showDialog && <ConfirmationDialog 
                     question="Do you wish to quit this game and start a new one?"
                     confirmAction={confirmMode}

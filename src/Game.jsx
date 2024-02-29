@@ -1,7 +1,7 @@
 import Square from './Square.jsx'
 import { useState, useEffect } from 'react'
 
-function Minesweeper({width, height, totalMines}) {
+function Minesweeper({width, height, totalMines, addMatch}) {
 
     const states = {
         RUNNING: 'running',
@@ -47,9 +47,11 @@ function Minesweeper({width, height, totalMines}) {
         return mines
     }
 
-    let [ minePositions ] = useState(selectMinePositions(totalMines))
-    let [ rows, setRows ]   = useState( [] )
-    let [ state, setState ] = useState(states.RUNNING)
+    let [minePositions]           = useState(selectMinePositions(totalMines))
+    let [rows, setRows]           = useState( [] )
+    let [state, setState]         = useState(states.RUNNING)
+    let [plays, setPlays]         = useState([])
+    let [startTime, setStartTime] = useState(0)
 
     useEffect( () => {
         init()
@@ -62,7 +64,17 @@ function Minesweeper({width, height, totalMines}) {
                 setState(states.WON)
             }
         }
+        if (startTime == 0) {
+            setStartTime(Date.now())
+        }
     }, [rows])
+
+    useEffect( () => {
+        if (state == states.GAME_OVER || state == states.WON) {
+            console.log(plays)
+            addMatch({plays, duration: Date.now() - startTime, state})
+        }
+    }, [plays, state])
 
     function init() {
 
@@ -94,6 +106,7 @@ function Minesweeper({width, height, totalMines}) {
                 let history = queue
                 revealRecursiveSquares(queue, history, true)
             }
+            pushPlay('left', rowNum, squareNum)
         }
     }
 
@@ -101,7 +114,12 @@ function Minesweeper({width, height, totalMines}) {
         let square = rows[rowNum][squareNum]
         if (state === states.RUNNING && !square.revealed) {
             toggleFlag(rowNum, squareNum)
+            pushPlay('right', rowNum, squareNum)
         }
+    }
+
+    function pushPlay(button, rowNum, squareNum) {
+        setPlays(plays.concat({button, rowNum, squareNum}))
     }
 
     function hasMine(rowNum, squareNum, mines) {
@@ -192,7 +210,6 @@ function Minesweeper({width, height, totalMines}) {
         return
 
     }
-
 
     function gameOver(sRowNum, sSquareNum) {
         setProperty(sRowNum, sSquareNum, properties.LOST, true)
