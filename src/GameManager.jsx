@@ -1,63 +1,51 @@
 import { useState, useEffect } from 'react'
 import Game from './Game.jsx'
-// import ConfirmationDialog from './ConfirmationDialog.jsx'
+import ConfirmationDialog from './ConfirmationDialog.js'
 
-function ConfirmationDialog ({question, confirmAction, reject}) {
-    return (
-        <div className="dialog-area">
-            <div className="dialog-box">
-                <label>{question}</label>
-                <div className="buttons">
-                    <button className="yes" onClick={confirmAction}>Yes</button>
-                    <button className="no" onClick={reject}>No</button>
-                </div>
-            </div>
-        </div>
-    )
+const modeNames = {
+    BEGINNER : 'beginner',
+    INTERMEDIATE : 'intermediate',
+    ADVANCED : 'advanced',
+}
+
+const modes = {
+    [modeNames.BEGINNER]:     { width: 9,  height: 9,  mines: 10 },
+    [modeNames.INTERMEDIATE]: { width: 16, height: 16, mines: 40 },
+    [modeNames.ADVANCED]:     { width: 30, height: 16, mines: 99 },
 }
 
 function GameManager() {
 
-    const modes = {
-        BEGINNER: 0,
-        INTERMEDIATE: 1,
-        ADVANCED: 2,
-    }
-
-    let [mode, setMode]             = useState(modes.BEGINNER)
     let [showDialog, setShowDialog] = useState(false)
+    let [cMode, setCMode]           = useState(modeNames.BEGINNER)
+    let [mode, setMode]             = useState(modeNames.BEGINNER)
+    let [gameKey, setGameKey]       = useState(1)
     let [width, setWidth]           = useState(9)
     let [height, setHeight]         = useState(9)
     let [totalMines, setTotalMines] = useState(10)
-    let [gameKey, setGameKey]       = useState(1)
-
-    let [confirmAction, setConfirmAction] = useState(null)
 
     useEffect( () => {
-        console.log('modes changed!')
-        switch(mode) {
-            case modes.BEGINNER: setWidth(9); setHeight(9); setTotalMines(10); break;
-            case modes.INTERMEDIATE: setWidth(16); setHeight(16); setTotalMines(40); break;
-            case modes.ADVANCED: setWidth(30); setHeight(16); setTotalMines(99); break;
-            default: break;
-        }
+        setGameKey(g => g+1)
+    }, [totalMines])
+
+    useEffect( () => {
+        setWidth(modes[mode].width)
+        setHeight(modes[mode].height)
+        setTotalMines(modes[mode].mines)
     }, [mode])
 
-    useEffect( () => {
-        console.log('1')
-        if (confirmAction !== null) {
-            console.log('2')
-            setShowDialog(true)
-        }
-    }, [confirmAction])
-
-    useEffect( () => {
-        setGameKey(gameKey+1)
-    }, [width, height, totalMines])
+    function confirmMode() {
+        setMode(cMode)
+        setShowDialog(false)
+    }
 
     function reject() {
         setShowDialog(false)
-        setConfirmAction(null)
+    }
+
+    function setQuestion(candidateMode) {
+        setCMode(candidateMode)
+        setShowDialog(true)
     }
 
     return (
@@ -65,23 +53,25 @@ function GameManager() {
             <div className="content">
                 <div className="column-left">
                         <button 
-                            className={mode === modes.BEGINNER ? 'selected' : ''}
-                            onClick={ () => {setConfirmAction(() => setMode(modes.BEGINNER))} }
+                            className={mode === modeNames.BEGINNER ? 'selected' : ''}
+                            onClick={() => {setQuestion(modeNames.BEGINNER)}}
                         >
                             Beginner
                         </button>
                         <button
-                            className={mode === modes.INTERMEDIATE ? 'selected' : ''}
-                            onClick={ () => {setConfirmAction(() => { console.log('por qué me ejecuto?') })} }
+                            className={mode === modeNames.INTERMEDIATE ? 'selected' : ''}
+                            onClick={() => {setQuestion(modeNames.INTERMEDIATE)}}
                         >
                             Intermediate
                         </button>
                         <button
-                            className={mode === modes.ADVANCED ? 'selected' : ''}
-                            onClick={ () => {setConfirmAction(() => setMode(modes.ADVANCED))} }
+                            className={mode === modeNames.ADVANCED ? 'selected' : ''}
+                            onClick={() => {setQuestion(modeNames.ADVANCED)}}
                         >
                             Advanced
                         </button>
+                        {/*
+                        */}
                     {/*
                     <div className="param">
                         <div>
@@ -130,7 +120,7 @@ function GameManager() {
             { 
                 showDialog && <ConfirmationDialog 
                     question="Do you wish to quit this game and start a new one?"
-                    confirmAction={confirmAction}
+                    confirmAction={confirmMode}
                     reject={reject}
                 />
             }
