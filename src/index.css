@@ -207,7 +207,6 @@ button.selected {
     flex-direction: column;
     gap: 10px;
     width: 100%;
-    max-height: 300px;
     overflow-y: scroll;
     /*
     background-color: #333;
@@ -222,17 +221,34 @@ button.selected {
     padding: 10px;
     text-align: left;
     position: relative;
+    background-color: #ccd;
+    animation-name: grow;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+    cursor: pointer;
+}
+.match.selected {
     background-color: #eef;
 }
 .match .number {
     font-weight: bold;
     font-size: 20px;
+    color: #aab;
+}
+.match.selected .number{
     color: #bbc;
 }
 .match .result {
     top: 0px;
     font-size: 20px;
 }
-.match .front {
-    z-index: 10;
+
+@keyframes grow {
+    from {
+        transform: scale(0.4, 0)
+    }
+
+    to {
+        transform: scale(1, 1)
+    }
 }

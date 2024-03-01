@@ -26,6 +26,9 @@ function GameManager() {
     let [totalMines, setTotalMines] = useState(10)
     let [matches, setMatches]       = useState([])
 
+    let [selectedMatch, setSelectedMatch] = useState(0)
+
+
     useEffect( () => {
         setGameKey(g => g+1)
     }, [totalMines])
@@ -35,6 +38,10 @@ function GameManager() {
         setHeight(modes[mode].height)
         setTotalMines(modes[mode].mines)
     }, [mode])
+
+    useEffect( () => {
+        setSelectedMatch(matches.length-1)
+    }, [matches])
 
     function addMatch(match) {
         match.mode = mode
@@ -63,6 +70,8 @@ function GameManager() {
                 mode={match.mode}
                 state={match.state}
                 number={index+1}
+                selected={index == selectedMatch}
+                onClick={() => { setSelectedMatch(index) }}
             />
     })
 
@@ -94,7 +103,7 @@ function GameManager() {
                             </button>
                         </div>
                     <div className="matches">
-                        {visualMatches}
+                        {visualMatches.reverse()}
                     </div>
                 </div>
                 <main>
