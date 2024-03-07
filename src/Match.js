@@ -15,6 +15,7 @@ const Match = ({number, plays, duration, mode, state, selected, onClick}) => {
     if (selected) {
         classes.push("selected")
     }
+
     return (
         <div onClick={onClick} className={classes.join(' ')}>
             <div className="front">
@@ -25,7 +26,10 @@ const Match = ({number, plays, duration, mode, state, selected, onClick}) => {
                     <b>mode</b>: {mode}
                 </div>
                 <div>
-                    <b>plays</b>: {plays.length} - {visualDuration}
+                    <b>time</b>: {visualDuration}
+                </div>
+                <div>
+                    <b>plays</b>: {plays.length}
                 </div>
             </div>
             <b>Result</b>: <span className="result back">{ state === states.GAME_OVER ? '🙁 ' : '😊' }</span>

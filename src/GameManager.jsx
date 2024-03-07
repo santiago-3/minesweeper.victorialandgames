@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Game from './Game.jsx'
 import ConfirmationDialog from './ConfirmationDialog.js'
 import Match from './Match.js'
+import axios from 'axios'
 
 const modeNames = {
     BEGINNER : 'beginner',
@@ -15,7 +16,7 @@ const modes = {
     [modeNames.ADVANCED]:     { width: 30, height: 16, mines: 99 },
 }
 
-function GameManager() {
+function GameManager({userid}) {
 
     let [showDialog, setShowDialog] = useState(false)
     let [cMode, setCMode]           = useState(modeNames.BEGINNER)
@@ -27,7 +28,6 @@ function GameManager() {
     let [matches, setMatches]       = useState([])
 
     let [selectedMatch, setSelectedMatch] = useState(0)
-
 
     useEffect( () => {
         setGameKey(g => g+1)
@@ -42,6 +42,7 @@ function GameManager() {
     useEffect( () => {
         setSelectedMatch(matches.length-1)
     }, [matches])
+
 
     function addMatch(match) {
         match.mode = mode
@@ -70,7 +71,7 @@ function GameManager() {
                 mode={match.mode}
                 state={match.state}
                 number={index+1}
-                selected={index == selectedMatch}
+                selected={index === selectedMatch}
                 onClick={() => { setSelectedMatch(index) }}
             />
     })
@@ -107,7 +108,13 @@ function GameManager() {
                     </div>
                 </div>
                 <main>
-                    <Game width={width} height={height} totalMines={totalMines} key={gameKey} addMatch={addMatch}/>
+                    <Game
+                        width={width}
+                        height={height}
+                        totalMines={totalMines}
+                        key={gameKey}
+                        addMatch={addMatch}
+                    />
                 </main>
             </div>
             {

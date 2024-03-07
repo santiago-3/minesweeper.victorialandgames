@@ -17,11 +17,11 @@ function Square({
         revealed = false
         if (gameOver && !hasMine){
             classes.push("crossedFlag")
-            img = <img src="/flag-crossed.png" />
+            img = <img alt="wrong-mine" src="/flag-crossed.png" />
         }
         else {
             classes.push("hasFlag")
-            img = <img src="/flag.png" />
+            img = <img alt="probable-mine" src="/flag.png" />
         }
     }
     if (revealed) {
@@ -31,7 +31,7 @@ function Square({
             if (lost) {
                 classes.push("lost")
             }
-            img = <img src="/mine.png" />
+            img = <img alt="mine" src="/mine.png" />
         }
         else if (surroundingMines > 0){
             number = <div className="display">{surroundingMines}</div>

@@ -1,7 +1,8 @@
 import Square from './Square.jsx'
 import { useState, useEffect } from 'react'
+import axios from 'axios'
 
-function Minesweeper({width, height, totalMines, addMatch}) {
+function Minesweeper({width, height, totalMines, addMatch, userid}) {
 
     const states = {
         RUNNING: 'running',
@@ -64,15 +65,17 @@ function Minesweeper({width, height, totalMines, addMatch}) {
                 setState(states.WON)
             }
         }
-        if (startTime == 0) {
+        if (startTime === 0) {
             setStartTime(Date.now())
         }
     }, [rows])
 
     useEffect( () => {
-        if (state == states.GAME_OVER || state == states.WON) {
+        if (state === states.GAME_OVER || state === states.WON) {
             console.log(plays)
-            addMatch({plays, duration: Date.now() - startTime, state})
+            const match = {plays, duration: Date.now() - startTime, state}
+            addMatch(match)
+            saveMatch(match)
         }
     }, [plays, state])
 
@@ -244,6 +247,21 @@ function Minesweeper({width, height, totalMines, addMatch}) {
             </div>
         )
     })
+
+    function saveMatch(match) {
+        const data = new FormData()
+        data.append('level', match.mode)
+        data.append('plays', match.plays)
+        data.append('time', match.duration)
+        data.append('victory', match.state === states.WON)
+        axios.post('http://localhost:8080/api/setgame', data, {
+            headers: {
+                'User-id': userid
+            }
+        }).then( response => {
+
+        })
+    }
 
     return (
         <div className={`game ${state}`}>
